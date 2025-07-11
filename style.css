@@ -1,0 +1,212 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  background: black;
+  cursor: crosshair;
+}
+
+#bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  filter: brightness(0.7);
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+  padding: 0 15px;
+  overflow: visible;
+}
+
+.frase {
+  font-size: 1.3rem;
+  color: #fff0f5;
+  text-shadow: 0 0 10px #ff99cc, 0 0 20px #ff3399;
+  animation: pulse 3s infinite ease-in-out;
+  z-index: 12;
+  position: relative;
+  max-width: 90vw;
+  line-height: 1.4;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+#click-particles,
+#hearts-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
+}
+
+#click-particles {
+  z-index: 20;
+}
+
+#hearts-canvas {
+  z-index: 18;
+}
+
+#toggle-music {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  z-index: 100;
+  background: #ff99cc;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ff66b2;
+  transition: background 0.3s ease;
+}
+
+#toggle-music:hover {
+  background: #ff66b2;
+}
+
+/* Novas regras para o cartão aberto e animação */
+
+@keyframes abrirCartao {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+#caixa-mensagem {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 25px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+  max-width: 90%;
+  max-height: 90%;
+  text-align: center;
+  z-index: 1001;
+  animation: abrirCartao 0.3s ease forwards;
+}
+
+#caixa-mensagem img {
+  width: 300px;
+  max-width: 90vw;
+  border-radius: 20px;
+  display: block;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  user-select: none;
+}
+
+#mensagem-texto {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 20px;
+  padding: 0 15px;
+}
+
+#fechar-mensagem {
+  padding: 10px 20px;
+  background: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+}
+
+#fechar-mensagem:hover {
+  background: #c2185b;
+}
+
+/* 🎵 PLAYER DE MÚSICA */
+
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #ff99cc;
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px #ff66b2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.music-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #fff3f8;
+  margin-top: 10px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: #ff66b2;
+  width: 0%;
+  transition: width 0.2s;
+}
+
+.time {
+  font-size: 12px;
+  color: #fff0f5;
+  margin-top: 5px;
+}

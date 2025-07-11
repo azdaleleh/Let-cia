@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Você é Meu Amor</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .coracaozinho {
+      width: 28px;
+      height: auto;
+      vertical-align: middle;
+      margin-left: 5px;
+      border-radius: 8px;
+    }
+
+    @keyframes abrirCartao {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.7);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    #caixa-mensagem {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 25px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+      max-width: 95%;
+      max-height: 90%;
+      text-align: center;
+      z-index: 1001;
+      opacity: 0;
+    }
+
+    #caixa-mensagem.aberta {
+      display: block;
+      animation: abrirCartao 0.4s ease forwards;
+    }
+
+    #caixa-mensagem img {
+      width: 220px;
+      max-width: 90vw;
+      border-radius: 20px;
+      display: block;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      user-select: none;
+    }
+
+    #mensagem-texto {
+      font-size: 1.2rem;
+      color: #e91e63;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      margin-bottom: 20px;
+      padding: 0 15px;
+    }
+
+    #fechar-mensagem {
+      padding: 10px 20px;
+      background: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    #fechar-mensagem:hover {
+      background: #c2185b;
+    }
+
+    /* Player de música */
+    .music-player {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #ff99cc;
+      padding: 10px 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px #ff66b2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+    }
+
+    .music-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 24px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #fff3f8;
+      margin-top: 10px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: #ff66b2;
+      width: 0%;
+      transition: width 0.2s;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #fff0f5;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Música de fundo -->
+  <audio id="bg-music"></audio>
+
+  <!-- Vídeo de fundo -->
+  <video autoplay muted loop playsinline id="bg-video">
+    <source src="https://cdn.discordapp.com/attachments/1388724550774034643/1392969634868629585/4144a16f344829be86871c66506a37e6_720w.mp4" type="video/mp4" />
+    Seu navegador não suporta vídeo.
+  </video>
+
+  <!-- Conteúdo principal -->
+  <div class="container">
+    <h1 class="frase">
+      Oi, meu amor. Fiz isso aqui só pra você ver um pedacinho do meu amor por você, Te amo muito, Letícia.
+      <img src="imagens/leleh22.png" alt="Coração da Leleh" class="coracaozinho" />
+    </h1>
+    <canvas id="click-particles"></canvas>
+    <canvas id="hearts-canvas"></canvas>
+  </div>
+
+  <!-- Cartinha -->
+  <img id="cartinha-topo" src="imagens/cartinha.png" alt="Cartinha" style="
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 70px;
+    height: auto;
+    cursor: pointer;
+    z-index: 1000;
+  " />
+
+  <!-- Caixa de mensagem com imagem personalizada -->
+  <div id="caixa-mensagem">
+    <img src="imagens/lele0.png" alt="Desenho Cartão" />
+    <div id="mensagem-texto">
+      Oi amor, passando aqui pra te dizer o tanto que eu amo você. Você literalmente chegou pra mudar minha vida, mudou pra melhor. Eu adoro nossos momentos, eu amo ficar junto contigo. E espero que a gente vá muito longe ainda. Você é a pessoa mais importante pra mim nesse momento. Adoro nossos momentos, Te amo muito.💖
+    </div>
+    <button id="fechar-mensagem">Fechar</button>
+  </div>
+
+  <!-- Player bonitinho -->
+  <div class="music-player">
+    <div class="music-controls">
+      <span id="prev">⏮️</span>
+      <span id="play">⏯️</span>
+      <span id="next">⏭️</span>
+    </div>
+    <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    <div class="time"><span id="current-time">0:00</span> / <span id="total-time">0:00</span></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const music = document.getElementById('bg-music');
+    const playBtn = document.getElementById('play');
+    const nextBtn = document.getElementById('next');
+    const prevBtn = document.getElementById('prev');
+    const progress = document.getElementById('progress');
+    const currentTimeEl = document.getElementById('current-time');
+    const totalTimeEl = document.getElementById('total-time');
+
+    const tracks = [
+      'musicmp3/musica1.mp3',
+      'musicmp3/musica2.mp3',
+      'musicmp3/musica3.mp3'
+    ];
+    let currentTrack = 0;
+
+    function loadTrack(index) {
+      music.src = tracks[index];
+      music.load();
+      music.play();
+      playBtn.textContent = '⏸️';
+    }
+
+    function formatTime(sec) {
+      const min = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60).toString().padStart(2, '0');
+      return `${min}:${s}`;
+    }
+
+    music.addEventListener('loadedmetadata', () => {
+      totalTimeEl.textContent = formatTime(music.duration);
+    });
+
+    music.addEventListener('timeupdate', () => {
+      const percent = (music.currentTime / music.duration) * 100;
+      progress.style.width = percent + '%';
+      currentTimeEl.textContent = formatTime(music.currentTime);
+    });
+
+    playBtn.addEventListener('click', () => {
+      if (music.paused) {
+        music.play();
+        playBtn.textContent = '⏸️';
+      } else {
+        music.pause();
+        playBtn.textContent = '⏯️';
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentTrack = (currentTrack + 1) % tracks.length;
+      loadTrack(currentTrack);
+    });
+
+    prevBtn.addEventListener('click', () => {
+      currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+      loadTrack(currentTrack);
+    });
+
+    // Inicia com a primeira música
+    loadTrack(currentTrack);
+
+    // Lógica da cartinha
+    const cartinhaTopo = document.getElementById('cartinha-topo');
+    const caixaMensagem = document.getElementById('caixa-mensagem');
+    const fecharMensagem = document.getElementById('fechar-mensagem');
+
+    cartinhaTopo.addEventListener('click', () => {
+      caixaMensagem.classList.remove('aberta');
+      void caixaMensagem.offsetWidth;
+      caixaMensagem.classList.add('aberta');
+    });
+
+    fecharMensagem.addEventListener('click', () => {
+      caixaMensagem.classList.remove('aberta');
+      caixaMensagem.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
